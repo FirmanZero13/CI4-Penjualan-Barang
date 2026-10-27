@@ -28,18 +28,47 @@ class Barang extends BaseController
     }
     public function store()
     {
-        
+        $this->barangModel->save([
+            'nama_barang' => $this->request->getVar('nama_barang'),
+            'harga'       => $this->request->getVar('harga'),
+            'stok'        => $this->request->getVar('stok')
+        ]);
+
+        session()->setFlashdata('pesan', 'Data barang berhasil ditambahkan.');
+
+        return redirect()->to('/barang');
     }
     public function edit($id_barang)
     {
+$data = [
+            'title'  => 'Edit Data Barang',
+            'barang' => $this->barangModel->find($id_barang) 
+        ];
 
+        return view('barang/edit', $data);
     }
     public function update($id_barang)
     {
+$this->barangModel->save([
+            'id_barang'   => $id_barang,
+            'nama_barang' => $this->request->getVar('nama_barang'),
+            'harga'       => $this->request->getVar('harga'),
+            'stok'        => $this->request->getVar('stok')
+        ]);
 
+        session()->setFlashdata('pesan', 'Data barang berhasil diubah.');
+
+        return redirect()->to('/barang');
     }
     public function delete($id_barang)
     {
+        // Menghapus data dari database berdasarkan ID
+        $this->barangModel->delete($id_barang);
 
+        // Menyiapkan pesan sukses
+        session()->setFlashdata('pesan', 'Data barang berhasil dihapus.');
+
+        // Mengembalikan user ke halaman utama
+        return redirect()->to('/barang');
     }
 }
